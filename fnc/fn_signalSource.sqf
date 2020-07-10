@@ -12,15 +12,16 @@ private _object = [];
 private _objectArray = [];
 //==============================================================
 
-if (isNil {spectrumDestination}) exitWith
-{
-	["No destination set. Spectrum Destination module must be synced with receiver unit"] call BIS_fnc_error;
-};
-
 //===============Assign module object to variable===============
 _module = param [0, objNull, [objNull]];
 if (isNull _module) exitWith {deleteVehicle _module};
 //==============================================================
+
+
+if (isNil {spectrumDestination}) then
+{
+	waitUntil {!isNil {spectrumDestination}};
+};
 
 //===============Exit function if signal name is duplicated===============
 _signalName = _module getVariable "specdev_spectrumSource_Name";
@@ -77,11 +78,12 @@ if (_frequency < _minFreq || _frequency > _maxFreq) exitWith
 _freqCheck append [_frequency,_minStrength];
 _arrayFrequency = (count _freqCheck - 2); //Persistent identifier of the frequnecy added to #EM_Values
 _arrayStrength = (count _freqCheck - 1); //Persistent identifier of frequency strength added to #EM_Values
-missionNamespace setVariable ["#EM_Values",_freqCheck];
-
+missionNamespace setVariable ["#EM_Values",_freqCheck, true];
 
 signalNameArray append [[_signalName,_arrayStrength,1]];
+publicVariable "signalNameArray";
 nameArray append [_signalName];
+publicVariable "nameArray";
 
 _signalPath = [signalNameArray, _signalName] call BIS_fnc_findNestedElement;
 _signalPath set [1,2];
@@ -140,7 +142,7 @@ while {alive _objectVar && (([signalNameArray, _signalPath] call BIS_fnc_returnN
 		_freqCheck = missionNamespace getVariable "#EM_Values";
 
 		_freqCheck set [_arrayStrength, _strength];
-		missionNamespace setVariable ["#EM_Values",_freqCheck];
+		missionNamespace setVariable ["#EM_Values",_freqCheck, true];
 	}
 	//===============================================================================================
 	//===============If source object isn't within 90 degrees then set frequency strength to minimum===============
@@ -148,10 +150,10 @@ while {alive _objectVar && (([signalNameArray, _signalPath] call BIS_fnc_returnN
 	{
 		_freqCheck = missionNamespace getVariable "#EM_Values";
 		_freqCheck set [_arrayStrength, _minStrength];
-		missionNamespace setVariable ["#EM_Values",_freqCheck];
+		missionNamespace setVariable ["#EM_Values",_freqCheck, true];
 	};
 	//=============================================================================================================
-
+	hint format ["%1",_freqCheck];
 	//===============Re-run the 'while' after _delay seconds===============
 	sleep _delay;
 	//=====================================================================
@@ -162,7 +164,7 @@ while {alive _objectVar && (([signalNameArray, _signalPath] call BIS_fnc_returnN
 if (!alive _objectVar || (([signalNameArray, _signalPath] call BIS_fnc_returnNestedElement) == 0)) exitWith {
 	_freqCheck = missionNamespace getVariable "#EM_Values";
 	_freqCheck set [_arrayStrength, _minStrength];
-	missionNamespace setVariable ["#EM_Values",_freqCheck];
+	missionNamespace setVariable ["#EM_Values",_freqCheck, true];
 	deleteVehicle _module;
 };
 //=====================================================================================================

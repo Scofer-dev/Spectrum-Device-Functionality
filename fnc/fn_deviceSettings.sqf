@@ -37,20 +37,22 @@ if ((_minSelection < _minFreq) || (_maxSelection > _maxFreq)) then
 	["Selection range not within frequency range: Frequency Range: %1-%2. Selection Range: %3-%4",_minFreq,_maxFreq,_minSelection,_maxSelection] call BIS_fnc_error;
 };
 
-missionNamespace setVariable ["#EM_FMin", _minFreq];
-missionNamespace setVariable ["#EM_FMax", _maxFreq];
+missionNamespace setVariable ["#EM_FMin", _minFreq, true];
+missionNamespace setVariable ["#EM_FMax", _maxFreq, true];
 
-missionNamespace setVariable ["#EM_SMin", _minStrength];
-missionNamespace setVariable ["#EM_SMax", _maxStrength];
+missionNamespace setVariable ["#EM_SMin", _minStrength, true];
+missionNamespace setVariable ["#EM_SMax", _maxStrength, true];
 
-missionNamespace setVariable ["#EM_SelMin", _minSelection];
-missionNamespace setVariable ["#EM_SelMax", _maxSelection];
+missionNamespace setVariable ["#EM_SelMin", _minSelection, true];
+missionNamespace setVariable ["#EM_SelMax", _maxSelection, true];
 
-missionNamespace setVariable ["#EM_Values", [0,0]];
+missionNamespace setVariable ["#EM_Values", [0,0], true];
 
 signalNameArray = [0];
 signalNameArray deleteAt 0;
+publicVariable "signalNameArray";
 nameArray = ["0"];
 nameArray deleteAt 0;
+publicVariable "nameArray";
 
 deleteVehicle _module;
