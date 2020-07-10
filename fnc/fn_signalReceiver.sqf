@@ -18,7 +18,7 @@ if (_receiverMethod == 0) then
 	spectrumDestination = _syncArray select 0;
 	publicVariable "spectrumDestination";
 }else{
-	_deviceUpdate = _module getVariable "specdev_spectrumDestination_deviceUpdate";
+	_deviceUpdate = abs(_module getVariable "specdev_spectrumDestination_deviceUpdate");
 	while {true} do
 	{		
 		{
