@@ -1,0 +1,2 @@
+-Intercept radio frequencies from TFAR/ACRE (Hook APIs somehow)
+-Signal jamming (drones/radio) (Signal types, if drone and signal in selection ranges and click, disable AI on drone)
