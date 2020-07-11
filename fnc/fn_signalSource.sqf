@@ -12,11 +12,15 @@ private _object = [];
 private _objectArray = [];
 //==============================================================
 
+if (receiverMethod == 2) exitWith
+{
+	[] remoteExec ["fnc_multiReceiver"];
+};
+
 //===============Assign module object to variable===============
 _module = param [0, objNull, [objNull]];
 if (isNull _module) exitWith {deleteVehicle _module};
 //==============================================================
-
 
 if (isNil {spectrumDestination}) then
 {

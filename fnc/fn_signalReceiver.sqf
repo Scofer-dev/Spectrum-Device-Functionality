@@ -10,9 +10,9 @@ private ["_module","_syncArray","_deviceUpdate"];
 _module = param [0, objNull, [objNull]];
 if (isNull _module) exitWith {deleteVehicle _module};
 
-_receiverMethod = _module getVariable "specdev_spectrumDestination_Method";
+receiverMethod = _module getVariable "specdev_spectrumDestination_Method";
 
-if (_receiverMethod == 0) then
+if (receiverMethod == 0) then
 {
 	_syncArray = synchronizedObjects _module;
 	spectrumDestination = _syncArray select 0;

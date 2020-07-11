@@ -32,6 +32,11 @@ class specdev_Module_spectrumDestination: Module_F
                     name = "One Device";
                     value = 1;
                 };
+                class specdev_spectrumDestination_Method_multiUnit
+                {
+                    name = "Multi Unit";
+                    value = 2;
+                };
             };
         };
         class specdev_spectrumDestination_deviceUpdate: Edit
