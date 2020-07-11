@@ -17,7 +17,6 @@ _module = param [0, objNull, [objNull]];
 if (isNull _module) exitWith {deleteVehicle _module};
 //==============================================================
 
-
 if (isNil {spectrumDestination}) then
 {
 	waitUntil {!isNil {spectrumDestination}};
@@ -153,7 +152,7 @@ while {alive _objectVar && (([signalNameArray, _signalPath] call BIS_fnc_returnN
 		missionNamespace setVariable ["#EM_Values",_freqCheck, true];
 	};
 	//=============================================================================================================
-	hint format ["%1",_freqCheck];
+
 	//===============Re-run the 'while' after _delay seconds===============
 	sleep _delay;
 	//=====================================================================
