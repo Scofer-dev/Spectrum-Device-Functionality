@@ -51,8 +51,8 @@ missionNamespace setVariable ["#EM_Values", [0,0], true];
 signalNameArray = [0];
 signalNameArray deleteAt 0;
 publicVariable "signalNameArray";
-nameArray = ["0"];
-nameArray deleteAt 0;
-publicVariable "nameArray";
+globalNameArray = ["0"];
+globalNameArray deleteAt 0;
+publicVariable "globalNameArray";
 
 deleteVehicle _module;

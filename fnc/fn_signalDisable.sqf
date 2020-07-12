@@ -13,7 +13,7 @@ if (isNull _module) exitWith {deleteVehicle _module};
 //===============Check if signal name is valid===============
 _signalName = _module getVariable "specdev_spectrumDisable_name";
 
-if (nameArray find _signalName == -1) exitWith
+if (globalNameArray find _signalName == -1) exitWith
 {
 	["Invalid signal name detected: %1. Signal name to remove must be same as a signal name in Signal Source modules.",_signalName] call BIS_fnc_error;
 };

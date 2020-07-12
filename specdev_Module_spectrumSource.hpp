@@ -17,7 +17,7 @@ class specdev_Module_spectrumSource: Module_F
         {
             property = "specdev_spectrumSource_Name";
             displayName = "Signal Name";
-            tooltip = "A custom name to identify the signal. Can be used by Disable Signal module. Not required if not using Disable Signal module.";
+            tooltip = "A custom name to identify the signal. Can be used by Disable Signal module. Required!";
             typeName = "STING";
         };
 
@@ -63,6 +63,14 @@ class specdev_Module_spectrumSource: Module_F
             tooltip = "How much the signal will degrade based on the angle offset between the source and receiver. Higher values mean the source will degrade more; lower values mean the source will degrade less. 0 will mean the source will not be degraded.";
             typeName = "NUMBER";
             defaultValue = "1";
+        };
+
+        class specdev_spectrumSource_signalReceiver: Edit
+        {
+            property = "specdev_spectrumSource_signalReceiver";
+            displayName = "Signal Receiver";
+            tooltip = "Specific which unit(s) will receive the signal, only used when 'Multi-Unit' method is used by Signal Receiver module";
+            typeName = "STRING";
         };
 
         class specdev_spectrumSource_EndAction: CheckBoxNumber
