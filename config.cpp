@@ -32,6 +32,7 @@ class CfgFunctions
             class signalReceiver;
             class signalSource;
             class signalDisable;
+            class unitReceiver;
         }
     };
 };
@@ -60,4 +61,18 @@ class CfgVehicles
     #include "specdev_Module_spectrumSource.hpp"
     #include "specdev_Module_spectrumDestination.hpp"
     #include "specdev_Module_spectrumDisable.hpp"
+};
+
+class CfgRemoteExec
+{
+    class Functions
+    {
+        mode = 2;
+        jip = 1;
+
+        class specdev_fnc_unitReceiver
+        {
+            allowedTargets = 0;
+        };
+    };
 };

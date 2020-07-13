@@ -1,8 +1,6 @@
 //========================================
 // Function: specdev_fnc_spectrumSource
 // Author: Scofer
-// Version: 1.0
-// Date: 08/07/20
 // Description: Disable the defined signal
 //========================================
 private ["_module","_signalName","_signalStrengthPath","_signalTimeout"];
@@ -13,7 +11,7 @@ if (isNull _module) exitWith {deleteVehicle _module};
 //===============Check if signal name is valid===============
 _signalName = _module getVariable "specdev_spectrumDisable_name";
 
-if (nameArray find _signalName == -1) exitWith
+if (globalNameArray find _signalName == -1) exitWith
 {
 	["Invalid signal name detected: %1. Signal name to remove must be same as a signal name in Signal Source modules.",_signalName] call BIS_fnc_error;
 };
@@ -27,6 +25,7 @@ _signalPath set [1,2];
 sleep _signalTimeout;
 
 [signalNameArray, _signalPath, 0] call BIS_fnc_setNestedElement;
+publicVariable "signalNameArray";
 
 /*
 signalNameArray = [[SignalOne,StrengthOne,1],[SignalTwo,StrengthTwo,1]];

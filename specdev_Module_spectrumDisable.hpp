@@ -2,6 +2,7 @@ class specdev_Module_spectrumDisable: Module_F
 {
 	scope = 2;
 	displayName = "Disable Signal";
+	icon = "\a3\Ui_F_Curator\Data\CfgCurator\waypoint_ca.paa";
 	category = "specdevSpectrum";
 	function = "specdev_fnc_signalDisable";
 	functionPriority = 4;

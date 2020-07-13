@@ -2,6 +2,7 @@ class specdev_Module_spectrumSource: Module_F
 {
     scope = 2;
     displayName = "Signal Source";
+    icon = "\a3\Modules_F_Curator\Data\iconRadio_ca.paa";
     category = "specdevSpectrum";
     function = "specdev_fnc_signalSource";
     functionPriority = 3;
@@ -17,7 +18,7 @@ class specdev_Module_spectrumSource: Module_F
         {
             property = "specdev_spectrumSource_Name";
             displayName = "Signal Name";
-            tooltip = "A custom name to identify the signal. Can be used by Disable Signal module. Not required if not using Disable Signal module.";
+            tooltip = "A custom name to identify the signal. Can be used by Disable Signal module. Required!";
             typeName = "STING";
         };
 
@@ -65,6 +66,14 @@ class specdev_Module_spectrumSource: Module_F
             defaultValue = "1";
         };
 
+        class specdev_spectrumSource_signalReceiver: Edit
+        {
+            property = "specdev_spectrumSource_signalReceiver";
+            displayName = "Signal Receiver";
+            tooltip = "Specific which unit(s) will receive the signal, only used when 'Unit' method is used by Signal Receiver module";
+            typeName = "STRING";
+        };
+
         class specdev_spectrumSource_EndAction: CheckBoxNumber
         {
             property = "specdev_spectrumSource_EndAction";
@@ -92,7 +101,8 @@ class specdev_Module_spectrumSource: Module_F
 			"Enter variable name(s) of Unit, Vehicle or Object.",
 			"Can enter multiple names, source will be chosen at random. Names MUST be seperated by comma.",
 			"i.e source_1,source_2,source_3",
-			"Multiple source can come from a single object.";
+			"Multiple signals can come from a single object.",
+            "Signal Receiver field only used when 'Unit' method is used in Signal Receiver module.";
         };
     };
 };
