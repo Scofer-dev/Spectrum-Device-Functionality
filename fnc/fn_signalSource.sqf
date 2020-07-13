@@ -3,23 +3,12 @@
 // Author: Scofer
 // Description: Sets the source frequency, and continually calculates frequency strength based on distance between signalReceiver and source object
 //======================================================================================================================================================
-private ["_module","_signalName","_frequency","_minFreq","_maxFreq","_range","_delay","_angleCoefficient","_minStrength","_endAction","_clientID"];
 
 //===Assign Module object to variable===
 private ["_module"];
 _module = param [0, objNull, [objNull]];
 if (isNull _module) exitWith {deleteVehicle _module};
 //======================================
-
-if (isNil {signalReceiver} && receiverMethod == 0) exitWith
-{
-	["No signal receiver set. Signal Receiver module must be synced to the receiving unit on 'One Unit' mode!"] call BIS_fnc_error;
-};
-
-if (isNil {signalReceiver} && receiverMethod == 1) then
-{
-	waitUntil {!isNil {signalReceiver}};
-};
 
 //===Check if signal name is unique, exit with error if not===
 private ["_signalName"];
@@ -30,6 +19,11 @@ if (globalNameArray find _signalName != -1) exitWith
 	["Duplicate signal name detected: %1",_signalName] call BIS_fnc_error;
 };
 //============================================================
+
+if (isNil {signalReceiver} && receiverMethod == 1) then
+{
+	waitUntil {!isNil {signalReceiver}};
+};
 
 //===Check if frequency is within frequency range, exit with error if not===
 private ["_frequency","_minFreq","_maxFreq"];
@@ -62,7 +56,7 @@ _objectError = 0;
 	if (isNil {_objectVar}) exitWith
 	{
 		_objectError = 1;
-		["Source object name: %1, is invalid. All source object names must be accurately set as an object variable name.",_x] call BIS_fnc_error;
+		["Source object name: %1, is invalid for signal: %2. All source object names must be accurately set as an object variable name.",_x,_signalName] call BIS_fnc_error;
 	};
 } forEach _objectsNameArray;
 
@@ -81,6 +75,27 @@ _delay = abs (_module getVariable "specdev_spectrumSource_Delay");
 _angleCoefficient = abs(_module getVariable "specdev_spectrumSource_angleCoefficient");
 
 _minStrength = missionNamespace getVariable "#EM_SMin";
+
+
+//===Add signal to global signal array===
+private ["_freqCheck","_arrayFrequency","_arrayStrength"];
+_freqCheck = missionNamespace getVariable "#EM_Values";
+_freqCheck append [_frequency,_minStrength];
+_arrayFrequency = (count _freqCheck - 2); //Persistent identifier of the frequnecy added to #EM_Values
+_arrayStrength = (count _freqCheck - 1); //Persistent identifier of frequency strength added to #EM_Values
+missionNamespace setVariable ["#EM_Values",_freqCheck, true];
+//=======================================
+
+signalNameArray append [[_signalName,_arrayStrength,1]];
+publicVariable "signalNameArray";
+globalNameArray append [_signalName];
+publicVariable "globalNameArray";
+
+//===Generate path to the added signal===
+private _signalPath = [];
+_signalPath = [signalNameArray, _signalName] call BIS_fnc_findNestedElement;
+_signalPath set [1,2];
+//=======================================
 
 
 //===Add the disable action to the source object===
@@ -110,32 +125,10 @@ if (_endAction == 1) then
 //=================================================
 
 
-if (receiverMethod == 0 || receiverMethod == 1) exitWith
+if (receiverMethod == 1) then
 {
-	private ["_freqCheck","_arrayFrequency","_arrayStrength"];
-
-	//===Add signal to global signal array===
-	_freqCheck = missionNamespace getVariable "#EM_Values";
-	_freqCheck append [_frequency,_minStrength];
-	_arrayFrequency = (count _freqCheck - 2); //Persistent identifier of the frequnecy added to #EM_Values
-	_arrayStrength = (count _freqCheck - 1); //Persistent identifier of frequency strength added to #EM_Values
-	missionNamespace setVariable ["#EM_Values",_freqCheck, true];
-	//=======================================
-
-	signalNameArray append [[_signalName,_arrayStrength,1]];
-	publicVariable "signalNameArray";
-	globalNameArray append [_signalName];
-	publicVariable "globalNameArray";
-
-	//===Generate path to the added signal===
-	private _signalPath = [];
-	_signalPath = [signalNameArray, _signalName] call BIS_fnc_findNestedElement;
-	_signalPath set [1,2];
-	//=======================================
-
 	private ["_objectDistance","_objectDistanceConversion","_objectRelativeDirection","_signalStrength"];
-	//===Whilst source object is alive and disable signal hasn't been activated===
-
+	//===Whilst source object is alive and disable signal hasn't been deactivated===
 	while {alive _objectVar && (([signalNameArray, _signalPath] call BIS_fnc_returnNestedElement) == 1)} do
 	{
 		//===If the source object is within 90 degrees infront of the receiver===
@@ -164,39 +157,44 @@ if (receiverMethod == 0 || receiverMethod == 1) exitWith
 		sleep _delay;
 	};
 
-	//===When source object is killed or disable signal has been activated===
+	//===When source object is killed or disable signal has been deactivated===
 	if (!alive _objectVar || (([signalNameArray, _signalPath] call BIS_fnc_returnNestedElement) == 0)) exitWith {
 		_freqCheck = missionNamespace getVariable "#EM_Values";
 		_freqCheck set [_arrayStrength, _minStrength];
 		missionNamespace setVariable ["#EM_Values",_freqCheck, true];
 		deleteVehicle _module;
 	};
-};
-/*
-if (receiverMethod == 2) exitWith
+}else
 {
-private ["_signalReceivers"];
-private _receiversArray = [];
-
-
 	//===Check if receivers have been set, exit with error if not===
+	private ["_signalReceivers","_receiverError","_receiverObject","_clientID"];
+	private _receiversArray = [];
+
 	_signalReceivers = _module getVariable "specdev_spectrumSource_signalReceiver";
-	if (isNil {_signalReceivers}) exitWith
-	{
-		["No signal receiver(s) set, must be defined when Signal Receiver method is set to 'Multi Unit'."];
-	};
-	//==============================================================
 	_receiversArray = _signalReceivers splitString ",";
+
+	if (count _receiversArray == 0) exitWith
 	{
-		//===Check if all receivers are valid, exit with error if not===
-		_receiverObject = missionNamespace getVariables [_x, objNull];
+		["No signal receivers set. Field in Signal Source module must be set when Units mode is used in Signal Receivers module. Error signal: %1",_signalName] call BIS_fnc_error;
+	};
+
+	_receiverError = 0;
+	{
+		_receiverObject = missionNamespace getVariable _x;
 		if (isNil {_receiverObject}) exitWith
 		{
-			["Invalid Signal Receiver name set in array: %1. All names must be valid.",_receiversArray];
+			_receiverError = 1;
+			["Receiver object name: %1, is invalid for signal: %2. All receiver object names must be accurately set as a unit variable name.",_x,_signalName] call BIS_fnc_error;
 		};
-		//==============================================================
+	} forEach _receiversArray;
 
-		_clientID = owner _receiverObject;
-		_handle = [_receiverObject] remoteExec ["specdev_fnc_multiReceiver", _clientID];
+	if (_receiverError == 1) exitWith
+	{};
+	//==============================================================
+	{
+		_receiverObject = missionNamespace getVariable _x;
+		_clientId = owner _receiverObject;
+		_handle = [_objectVar,_signalPath,_receiverObject,_range,_angleCoefficient,_arrayStrength,_minStrength,_delay] remoteExec ["specdev_fnc_unitReceiver", _clientID];
+		//params ["_objectVar","_signalPath","_receiverObject","_range","_angleCoefficient","_arrayStrength","_minStrength","_delay"];
 	} forEach _receiversArray;
 };

@@ -32,7 +32,7 @@ class CfgFunctions
             class signalReceiver;
             class signalSource;
             class signalDisable;
-            class multiReceiver;
+            class unitReceiver;
         }
     };
 };
@@ -70,7 +70,7 @@ class CfgRemoteExec
         mode = 2;
         jip = 1;
 
-        class specdev_fnc_multiReceiver
+        class specdev_fnc_unitReceiver
         {
             allowedTargets = 0;
         };

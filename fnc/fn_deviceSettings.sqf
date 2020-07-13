@@ -1,8 +1,6 @@
 //======================================================================================================================================================
 // Function: specdev_fnc_deviceSettings
 // Author: Scofer
-// Version: 1.1
-// Date: 08/07/20
 // Description: Configures the global #EM variables for the spectrum device
 //======================================================================================================================================================
 private ["_module","_minFreq","_maxFreq","_minStrength","_maxStrength","_minSelection","_maxSelection"];

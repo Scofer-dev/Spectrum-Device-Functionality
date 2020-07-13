@@ -2,6 +2,7 @@ class specdev_Module_deviceSettings: Module_F
 {
 	scope = 2;
 	displayName = "Device Settings";
+	icon = "\A3\Data_F_Enoch\Logos\arma3_enoch_picture_ca.paa";
 	category = "specdevSpectrum";
 	function = "specdev_fnc_deviceSettings";
 	functionPriority = 1;

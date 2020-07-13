@@ -1,8 +1,6 @@
 //========================================
 // Function: specdev_fnc_spectrumSource
 // Author: Scofer
-// Version: 1.0
-// Date: 08/07/20
 // Description: Disable the defined signal
 //========================================
 private ["_module","_signalName","_signalStrengthPath","_signalTimeout"];
@@ -27,6 +25,7 @@ _signalPath set [1,2];
 sleep _signalTimeout;
 
 [signalNameArray, _signalPath, 0] call BIS_fnc_setNestedElement;
+publicVariable "signalNameArray";
 
 /*
 signalNameArray = [[SignalOne,StrengthOne,1],[SignalTwo,StrengthTwo,1]];
